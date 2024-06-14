@@ -6,9 +6,17 @@ using System.Diagnostics;
 
 namespace FavouriteDirectories
 {
-    class Program
+    public class ProgramEntry
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
+        {
+            Fav fav = new Fav(args);
+        }
+    }
+
+    public class Fav
+    {
+        public Fav(string[] args)
         {
             //Path to favourites.txt
             //Where the favourites will be stored
@@ -32,7 +40,7 @@ namespace FavouriteDirectories
             ConsiderArgs(args, path, favourites);
         }
 
-        internal static void ConsiderArgs(string[] args, string path, string favourites)
+        public void ConsiderArgs(string[] args, string path, string favourites)
         {
             //If the user has just typed "fav" then go to first favourite
             if (args.Length < 1)
@@ -109,7 +117,7 @@ namespace FavouriteDirectories
             }
         }
 
-        internal static void ShowDirectories(string[] favouritesArr)
+        public void ShowDirectories(string[] favouritesArr)
         {
 
             if (favouritesArr.Length == 0)
@@ -136,7 +144,7 @@ namespace FavouriteDirectories
             }
         }
 
-        internal static void SendHelpMessage()
+        public void SendHelpMessage()
         {
             const string helpMsg = "Here are useful commands you can use fav:\n" +
                             "'fav add (directory name)' = Adds a new directory (directory name) to the list of favourites\n" +
@@ -148,7 +156,7 @@ namespace FavouriteDirectories
         }
 
 
-        internal static void ResetDirectories(string path)
+        public void ResetDirectories(string path)
         {
             if (!File.Exists(path))
             {
@@ -160,17 +168,17 @@ namespace FavouriteDirectories
             File.WriteAllText(path, string.Empty);
         }
 
-        internal static void AddDirectory(string[] args, string fullArgs, string path, string favourites)
+        public void AddDirectory(string[] args, string fullArgs, string path, string favourites)
         {
+            //The directory to add
+            string dir = AddDirectorySeperator(args[1].TrimEnd());
+
             //Check if directory exists
-            if (!Directory.Exists(args[1].TrimEnd()))
+            if (!Directory.Exists(dir))
             {
                 Console.WriteLine("No valid directory: " + args[1]);
                 return;
             }
-
-            //The directory to add
-            string dir = AddDirectorySeperator(args[1]);
 
             //Split into string[]
             string[] favouritesArr = favourites.Split("\n");
@@ -203,7 +211,7 @@ namespace FavouriteDirectories
             }
         }
 
-        internal static void MoveDirectory(string favourites, string index)
+        public void MoveDirectory(string favourites, string index)
         {
             if (favourites.Length == 0 || favourites == null)
             {
@@ -264,7 +272,7 @@ namespace FavouriteDirectories
             }
         }
 
-        internal static void RemoveDirectory(string[] favouritesArr, string index, string path)
+        public void RemoveDirectory(string[] favouritesArr, string index, string path)
         {
             int i;
             //Get index
@@ -309,7 +317,7 @@ namespace FavouriteDirectories
             }
         }
 
-        internal static string AddDirectorySeperator(string s)
+        public static string AddDirectorySeperator(string s)
         {
             if(s == null || s == "")
             {
@@ -325,18 +333,23 @@ namespace FavouriteDirectories
                     return "";
                 }
 
-                if(!s.EndsWith(Path.DirectorySeparatorChar))
+                else if(!s.EndsWith(Path.DirectorySeparatorChar))
                 {
                     s += Path.DirectorySeparatorChar;
                 }
             }
 
-            else
+            else if(s.Contains(Path.AltDirectorySeparatorChar))
             {
                 if (!s.EndsWith(Path.AltDirectorySeparatorChar))
                 {
                     s += Path.AltDirectorySeparatorChar;
                 }
+            }
+
+            else
+            {
+                s += Path.DirectorySeparatorChar;
             }
 
             return s;
