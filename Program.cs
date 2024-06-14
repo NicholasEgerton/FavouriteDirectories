@@ -28,32 +28,31 @@ namespace FavouriteDirectories
             {
                 favourites = streamReader.ReadToEnd();
             }
+            
+            ConsiderArgs(args, path, favourites);
+        }
 
+        internal static void ConsiderArgs(string[] args, string path, string favourites)
+        {
             //If the user has just typed "fav" then go to first favourite
             if (args.Length < 1)
             {
                 if (favourites.Length == 0 || favourites == null)
                 {
                     Console.WriteLine("No favourites added yet.\nType 'fav add (directory name)' to add one!");
+                    return;
                 }
 
-                else {
+                else
+                {
                     MoveDirectory(favourites, "1");
                     return;
                 }
             }
 
-            //Otherwise, consider args
-            else
-            {
-                ConsiderArgs(args, path, favourites);
-            }
-        }
-
-        internal static void ConsiderArgs(string[] args, string path, string favourites)
-        {
-            //As a string instead of string array
+            //Save args a string instead of string array
             string fullArgs = string.Join(" ", args);
+            //Save favourites as an arr instead of a string
             string[] favouritesArr = favourites.Split("\n");
 
             //Consider arguments
